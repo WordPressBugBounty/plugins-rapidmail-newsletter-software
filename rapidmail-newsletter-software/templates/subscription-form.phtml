@@ -1,0 +1,64 @@
+<?php $url = $options->get('subscribe_form_url'); ?>
+
+<?php if (!empty($url)): ?>
+    <form class="rm-form" id="rm-subscriptionform-<?php echo $widget->number; ?>" action="<?php echo $url; ?>" method="post" target="_blank">
+
+        <ul class="rm-form-container">
+            <?php foreach ($form_config as $field_name => $field_config): ?>
+
+                <?php if ($field_config['type'] === 'honeypot'): ?>
+                    <li style="position:absolute; z-index: -100; left:-6000px;" aria-hidden="true">
+                        <input type="text" name="<?php echo $field_name; ?>" value="" tabindex="-1"/>
+                        <textarea name="rm_comment" tabindex="-1"></textarea>
+                    </li>
+                <?php endif; ?>
+
+            <?php endforeach; ?>
+            <?php foreach ($form_config as $field_name => $field_config): ?>
+
+                <?php if ((empty($instance['show_' . $field_name]) && empty($field_config['constraints']['required'])) || in_array($field_name, ['captcha', 'submit'])): continue; endif; ?>
+
+                <?php if ($field_config['type'] === 'radio'): ?>
+                    <li rel="radio">
+                        <label><?php echo \esc_html($field_config['label']); ?></label>
+
+                        <div class="rm-radio-container rm-<?php echo $field_name; ?>-error-after">
+                            <?php foreach ($field_config['values'] as $value => $label): ?>
+                                <div class="rm-radio-box">
+                                    <input type="radio" id="rm_<?php echo $field_name; ?>_<?php echo $value; ?>" name="<?php echo $field_name; ?>" value="<?php echo $value; ?>" autocomplete="sex">
+                                    <label for="rm_<?php echo $field_name; ?>_<?php echo $value; ?>"><?php echo \esc_html($label); ?></label>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+
+                    </li>
+                <?php elseif ($field_config['type'] === 'checkbox'): ?>
+                    <li rel="<?php echo $field_name; ?>">
+                        <label class="checkbox-label rm-<?php echo $field_name; ?>-error-after" for="<?php echo $field_name; ?>">
+                            <?php if ($field_config['constraints']['required']): ?>
+                                <input type="checkbox" name="<?php echo $field_name; ?>" id="<?php echo $field_name; ?>" value="yes">
+                            <?php endif; ?>
+                            <?php echo \esc_html($field_config['label']); ?>
+                        </label>
+                    </li>
+                <?php else: ?>
+                    <li rel="<?php echo $field_name; ?>">
+                        <label for="rm-<?php echo $field_name; ?>"><?php echo \esc_html($field_config['label']); ?><?php if ($field_config['constraints']['required']): ?><span class="required">*</span><?php endif; ?></label>
+                        <input id="rm-<?php echo $field_name; ?>" name="<?php echo $field_name; ?>" type="text" autocomplete="email"<?php if (!empty($field_config['constraints']['maxlength'])): ?> maxlength="<?php echo $field_config['constraints']['maxlength']; ?>"<?php endif; ?>>
+                    </li>
+                <?php endif; ?>
+
+            <?php endforeach; ?>
+
+            <li rel="button">
+                <?php if (isset($form_config['submit'])): ?>
+                    <input type="submit" value="<?php echo \esc_html($form_config['submit']['label']); ?>" autocomplete="off">
+                <?php else: ?>
+                    <input type="submit" value="<?php \_e('Anmelden', \Rapidmail\Rapidmail::TEXT_DOMAIN); ?>" autocomplete="off">
+                <?php endif; ?>
+                <div class="spinner" style="background:url(<?php echo includes_url('images/spinner.gif') ; ?>)"></div>
+            </li>
+        </ul>
+
+    </form>
+<?php endif; ?>

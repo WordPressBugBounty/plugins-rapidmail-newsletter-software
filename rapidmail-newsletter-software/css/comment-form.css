@@ -1,0 +1,3 @@
+.comment-form-rm-subscribe input[type="checkbox"] + label {
+    display: inline;
+}
