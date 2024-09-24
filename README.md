@@ -1,0 +1,1 @@
+# plugins-rapidmail-newsletter-software
